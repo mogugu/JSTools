@@ -180,10 +180,12 @@
 
             $next.click(function (e) {
                 e.preventDefault();
+                stopAutoPlay();
                 playNext();
             });
             $prev.click(function (e) {
                 e.preventDefault();
+                stopAutoPlay();
                 playPrev();
             });
             autoPlay();
