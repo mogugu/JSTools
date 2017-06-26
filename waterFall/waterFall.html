@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>waterFall</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .content{
+            position: relative;
+        }
+        .item{
+            position: absolute;
+            width: 200px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            transition: all 1s;
+        }
+        .h1{
+            height: 300px;
+        }
+        .h2{
+            height: 500px;
+        }
+        .h3{
+            height: 350px;
+        }
+        .h4{
+            height: 400px;
+        }
+        .h5{
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="item h1">
+        <img src="https://unsplash.it/200/300/?random" alt="">
+    </div>
+    <div class="item h2">
+        <img src="https://unsplash.it/200/500/?random" alt="">
+    </div>
+    <div class="item h3">
+        <img src="https://unsplash.it/200/350/?random" alt="">
+    </div>
+    <div class="item h4">
+        <img src="https://unsplash.it/200/400/?random" alt="">
+    </div>
+    <div class="item h5">
+        <img src="https://unsplash.it/200/200/?random" alt="">
+    </div>
+    <div class="item h3">
+        <img src="https://unsplash.it/200/350/?random" alt="">
+    </div>
+    <div class="item h4">
+        <img src="https://unsplash.it/200/400/?random" alt="">
+    </div>
+    <div class="item h1">
+        <img src="https://unsplash.it/200/300/?random" alt="">
+    </div>
+    <div class="item h5">
+        <img src="https://unsplash.it/200/200/?random" alt="">
+    </div>
+    <div class="item h2">
+        <img src="https://unsplash.it/200/500/?random" alt="">
+    </div>
+    <div class="item h5">
+        <img src="https://unsplash.it/200/200/?random" alt="">
+    </div>
+    <div class="item h2">
+        <img src="https://unsplash.it/200/500/?random" alt="">
+    </div>
+</div>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $(function () {
+        waterFall();
+        $(window).resize(function () {
+            waterFall()
+        });
+        function waterFall() {
+            var $items=$(".item");
+            var itemArr=[];
+            var $itemWidth=$items.outerWidth(true);
+            console.log($itemWidth);
+            var column=parseInt($(window).width()/$itemWidth);
+            for(var i=0;i<column;i++){
+                itemArr[i]=0;
+            }
+
+            $items.each(function () {
+                var minValue=Math.min.apply(null,itemArr);  //得到最小高度的列
+                var minIndex=itemArr.indexOf(minValue);  //得到最小高度的列所在的位置
+
+                $(this).css({
+                    top: itemArr[minIndex],
+                    left: $itemWidth * minIndex
+                });
+                itemArr[minIndex] += $(this).outerHeight(true);
+                console.log($(this).outerHeight(true));
+            });
+        }
+    })
+</script>
+</body>
+</html>
