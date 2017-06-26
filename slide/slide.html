@@ -82,7 +82,7 @@
             left: 10px;
         }
     </style>
-    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
     <div class="slide-box">
@@ -180,10 +180,12 @@
 
             $next.click(function (e) {
                 e.preventDefault();
+                stopAutoPlay();
                 playNext();
             });
             $prev.click(function (e) {
                 e.preventDefault();
+                stopAutoPlay();
                 playPrev();
             });
             autoPlay();
