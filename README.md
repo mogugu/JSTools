@@ -6,6 +6,7 @@ IE与标准浏览器的事件兼容
 - getTarget(e)
 - stopPropagation(e)
 - preventDefault(e)
+
 新增常用效果的实现
 - 轮播效果 （slide）
 - 瀑布流
