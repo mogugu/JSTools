@@ -75,35 +75,41 @@
         <img src="https://unsplash.it/200/500/?random" alt="">
     </div>
 </div>
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
     $(function () {
-        waterFall();
-        $(window).resize(function () {
-            waterFall()
-        });
-        function waterFall() {
-            var $items=$(".item");
-            var itemArr=[];
-            var $itemWidth=$items.outerWidth(true);
-            console.log($itemWidth);
-            var column=parseInt($(window).width()/$itemWidth);
-            for(var i=0;i<column;i++){
-                itemArr[i]=0;
-            }
-
-            $items.each(function () {
-                var minValue=Math.min.apply(null,itemArr);  //得到最小高度的列
-                var minIndex=itemArr.indexOf(minValue);  //得到最小高度的列所在的位置
-
-                $(this).css({
-                    top: itemArr[minIndex],
-                    left: $itemWidth * minIndex
+        var waterFall=function () {
+            function init() {
+                waterFall();
+                $(window).resize(function () {
+                    waterFall()
                 });
-                itemArr[minIndex] += $(this).outerHeight(true);
-                console.log($(this).outerHeight(true));
-            });
-        }
+            }
+            function waterFall() {
+                var $items=$(".item");
+                var itemArr=[];
+                var $itemWidth=$items.outerWidth(true);
+                var column=parseInt($(window).width()/$itemWidth);
+                for(var i=0;i<column;i++){
+                    itemArr[i]=0;
+                }
+
+                $items.each(function () {
+                    var minValue=Math.min.apply(null,itemArr);  //得到最小高度的列
+                    var minIndex=itemArr.indexOf(minValue);  //得到最小高度的列所在的位置
+
+                    $(this).css({
+                        top: itemArr[minIndex],
+                        left: $itemWidth * minIndex
+                    });
+                    itemArr[minIndex] += $(this).outerHeight(true);
+                });
+            }
+            return {
+                init: init
+            }
+        }();
+        waterFall.init();
     })
 </script>
 </body>

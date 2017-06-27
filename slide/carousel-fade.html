@@ -111,82 +111,87 @@
     </div>
     <script>
         $(function () {
-            var $slide=$(".slides");
-            var $items=$slide.children();
-            var $next=$(".next");
-            var $prev=$(".prev");
-            var $bullets=$(".bullet li");
+            var slide=function () {
+                var $slide = $(".slides");
+                var $items = $slide.children();
+                var $next = $(".next");
+                var $prev = $(".prev");
+                var $bullets = $(".bullet li");
 
-            var $imgWidth=$items.width();
-            var $imgCount=$items.length;
+                var $imgCount = $items.length;
 
-            var curIndex=0;
-            var isAnimate=false;
-            var clock;
+                var curIndex = 0;
+                var isAnimate = false;
+                var clock;
 
-            $items.first().show();
+                $items.first().show();
 
-            function playNext() {
-                if(curIndex===$imgCount-1){
-                    play(0);
+                function playNext() {
+                    if (curIndex === $imgCount - 1) {
+                        play(0);
+                    }
+                    play(curIndex + 1);
                 }
-                play(curIndex+1);
-
-            }
-            function playPrev() {
-                if(curIndex===0){
-                    play($imgCount-1);
-                }else{
-                    play(curIndex-1);
+                function playPrev() {
+                    if (curIndex === 0) {
+                        play($imgCount - 1);
+                    } else {
+                        play(curIndex - 1);
+                    }
                 }
-            }
-
-            $next.click(function (e) {
-                e.preventDefault();
-                stopAutoPlay();
-                playNext();
-            });
-            $prev.click(function (e) {
-                e.preventDefault();
-                stopAutoPlay();
-                playPrev();
-            });
-
-            autoPlay();
-            $items.mouseenter(function () {
-                stopAutoPlay();
-            }).mouseleave(function () {
-                autoPlay();
-            });
-            function setBullet() {
-                $bullets.removeClass("active").eq(curIndex).addClass("active");
-            }
-            function play(idx) {
-                if(isAnimate)
-                {
-                    return;
+                function init() {
+                    autoPlay();
+                    $items.mouseenter(function () {
+                        stopAutoPlay();
+                    }).mouseleave(function () {
+                        autoPlay();
+                    });
+                    $bullets.click(function () {
+                        var index = $(this).index();
+                        play(index);
+                    });
+                    $next.click(function (e) {
+                        e.preventDefault();
+                        stopAutoPlay();
+                        playNext();
+                    });
+                    $prev.click(function (e) {
+                        e.preventDefault();
+                        stopAutoPlay();
+                        playPrev();
+                    });
                 }
-                isAnimate=true;
-                $items.eq(curIndex).fadeOut(400);
-                $items.eq(idx).fadeIn(400,function () {
-                    isAnimate=false;
-                });
-                curIndex=idx;
-                setBullet();
-            }
-            $bullets.click(function () {
-                var index=$(this).index();
-                play(index);
-            });
-            function autoPlay() {
-                 clock=setInterval(function () {
-                    playNext();
-                },3000);
-            }
 
-            function stopAutoPlay() {
-                clearInterval(clock)
-            }
+                function setBullet() {
+                    $bullets.removeClass("active").eq(curIndex).addClass("active");
+                }
+
+                function play(idx) {
+                    if (isAnimate) {
+                        return;
+                    }
+                    isAnimate = true;
+                    $items.eq(curIndex).fadeOut(500);
+                    $items.eq(idx).fadeIn(500, function () {
+                        isAnimate = false;
+                    });
+                    curIndex = idx;
+                    setBullet();
+                }
+                function autoPlay() {
+                    clock = setInterval(function () {
+                        playNext();
+                    }, 3000);
+                }
+
+                function stopAutoPlay() {
+                    clearInterval(clock)
+                }
+                return {
+                    init: init
+                };
+            }();
+            slide.init();
         })
     </script>
 </body>
