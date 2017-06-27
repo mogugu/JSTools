@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lazyNews-waterFall</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a{
+            text-decoration: none;
+        }
+        li{
+            list-style: none;
+        }
+        .container{
+            width: 1000px;
+            margin: 0 auto;
+        }
+        .news-list{
+            position: relative;
+        }
+        .news-list .item{
+            position: absolute;
+            border: 1px solid #f0f0f0;
+            width: 280px;
+            margin: 10px;
+            padding-bottom: 10px;
+            transition: all 1s;
+        }
+        .news-list .item img{
+            margin: 10px;
+            width: 260px;
+        }
+        .news-list .item h3{
+            line-height: 30px;
+            margin: 0 15px;
+            color: #333;
+            font-size: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .news-list .item .des{
+            color: #929292;
+            font-size: 12px;
+            line-height: 16px;
+            margin: 10px 15px 0;
+        }
+        #load{
+            height: 10px;
+            visibility: hidden;
+        }
+        .hide{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <ul class="news-list" id="news-ct">
+        <!--<li class="item">-->
+            <!--<a href="#">-->
+                <!--<img src="http://n.sinaimg.cn/tech/transform/20170626/D5GV-fyhneam2265386.jpg" alt="">-->
+            <!--</a>-->
+            <!--<h3>全球十大科技最前沿的飞行汽车</h3>-->
+            <!--<p class="des">-->
+                <!--“变形金刚”，从普通驾驶模型至飞行模式切换仅需3分钟。-->
+            <!--</p>-->
+        <!--</li>-->
+        <li class="item hide"></li>
+    </ul>
+    <p id="load"></p>
+</div>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    $(function () {
+        var $itemWidth=$(".item").outerWidth(true);
+        var column=parseInt($(".container").width()/$itemWidth); //得到列数
+        var newsNum=8;
+        var page=1;
+        var colHeight=[];
+        //存放瀑布流元素高度的数组初始化
+        for(var i=0;i<column;i++){
+            colHeight[i]=0;
+        }
+
+        var isDataArrive=true; //在数据到来前防止重复加载
+
+        start();
+        function start() {
+            getData(function (res) {
+                isDataArrive=true;
+                $.each(res,function (idx,node) {
+                    var $node=getNode(node);
+                    $node.find("img").load(function () {
+                        $("#news-ct").append($node);
+                        waterFall($node);
+
+                    })
+                })
+
+            });
+            isDataArrive=false;
+        }
+
+        //懒加载
+        $(window).scroll(function () {
+            if(!isDataArrive)
+                return;
+            if(isVisible($("#load"))){
+                start();
+            }
+        });
+        //获取数据
+        function getData(callback) {
+            $.ajax({
+              url: 'https://platform.sina.com.cn/slide/album_tech',
+              dataType: 'jsonp',
+                jsonp: 'jsoncallback',
+                data: {
+                  app_key: '1271687855',
+                   num: newsNum,
+                    page:page
+                }
+            }).done(function (result) {
+               if(result && result.status && result.status.code==='0'){
+                   callback(result.data);
+                   page++;
+               }else{
+                   console.log("获取数据错误");
+               }
+            }).fail(function () {
+                console.log("服务器错误，获取数据失败");
+            })
+        }
+
+        //创建Html节点
+        function getNode(data){
+            var htmls="<li class='item'><a href='"+data.url+"'>";
+            htmls += "<img src='"+data.img_url+"'></a>";
+            htmls += "<h3>"+data.short_name +"</h3>";
+            htmls += "<p class='des'>"+ data.short_intro +"</p></li>"
+
+            return $(htmls);
+        }
+
+        //将节点以瀑布流的方式放置在页面中
+        function waterFall($node) {
+            var minHeight=Math.min.apply(null,colHeight);
+            var minIndex=colHeight.indexOf(minHeight);
+
+            $node.css({
+               top: minHeight,
+                left: $itemWidth*minIndex,
+                opacity:1
+            });
+            colHeight[minIndex]+=$node.outerHeight(true);
+            $("#news-ct").height(Math.max.apply(null,colHeight));
+        }
+
+        //检查是否在可视范围
+        function isVisible($node) {
+            var top=$(window).scrollTop();
+            var offsetTop=$node.offset().top;
+            var height=$(window).height();
+            if(offsetTop<top+height){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+    })
+</script>
+</body>
+</html>
