@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Barrels</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .content{
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .img-row{
+            overflow: hidden;
+        }
+        .img-row .img-box{
+            float: left;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="content" id="ct">
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        function Barrels($ct) {
+            this.$ct=$ct;
+            this.rowList=[];
+            this.loadImages();
+        }
+        Barrels.prototype={
+            
+            //加载图片
+            loadImages:function () {
+                var self=this;
+               var imgs=self.getImagesUrl(20);
+               $.each(imgs,function (idx,url) {
+                   var img=new Image();
+                   img.src=url;
+                   $(img).on("load",function () {
+                       var imgInfo={
+                           target: $(img),
+                           width: 200* (img.width/img.height)+10,
+                           height: 200
+                       };
+                       self.render(imgInfo);
+                   })
+               });
+            },
+            //计算图片摆放
+            render: function (img) {
+                var clientWidth  = this.$ct.width();
+                var rowList=this.rowList;
+                var rowWidth=0,newOuterHeight=0;
+                var lastInfo=img;
+                var self=this;
+
+                rowList.push(img);
+                $.each(rowList,function(idx,imgInfo){
+                    rowWidth += imgInfo.width;
+                    console.log(rowWidth);
+                    if(rowWidth>clientWidth){
+                        rowList.pop();
+                        rowWidth= rowWidth-lastInfo.width;
+                        newOuterHeight =clientWidth*200/rowWidth; //计算出新的高度
+                        self.layout(newOuterHeight);
+                        self.rowList=[];
+                        self.rowList.push(lastInfo);
+                    }
+                });
+
+            },
+            //放置图片
+            layout: function (height) {
+                var $rowct=$("<div class='img-row'></div>");
+                $.each(this.rowList,function (idx,imgInfo) {
+                    var $imgct=$("<div class='img-box'></div>");
+                        $img=imgInfo.target;
+                        $img.height(height);
+                        $imgct.append($img);
+                        $rowct.append($imgct);
+                });
+                this.$ct.append($rowct);
+            },
+            //获取图片
+            getImagesUrl: function (num) {
+                var width,height,urls=[];
+                for(var i=0;i<num;i++){
+                    width= Math.floor(Math.random()*300+ 200);
+                    height= Math.floor(Math.random()*300 + 100);
+                    urls.push("https://unsplash.it/"+width+"/"+height);
+                }
+                return urls;
+            }
+
+        };
+        var b=new Barrels($("#ct"));
+    </script>
+</body>
+</html>
