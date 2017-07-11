@@ -229,7 +229,9 @@
                 };
                 return {
                     init: function ($ct) {
-                        new Slide($ct);
+                        $ct.each(function (idx,node) {
+                            new Slide($(node));
+                        });
                     }
                 }
             })();
