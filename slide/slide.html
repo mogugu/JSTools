@@ -82,10 +82,10 @@
             left: 10px;
         }
     </style>
-    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-    <div class="slide-box">
+    <div class="slide-box" id="slide">
         <ul class="slides">
             <li>
                 <a href="#">
@@ -119,103 +119,121 @@
     </div>
     <script>
         $(function () {
-            var $slide=$(".slides");
-            var $items=$slide.children();
-            var $next=$(".next");
-            var $prev=$(".prev");
-            var $bullets=$(".bullet li");
 
-            var $imgWidth=$items.width();
-            var $imgCount=$items.length;
-
-            var pageIndex=0;
-            var isAnimate=false;
-            var clock;
-
-            //复制前后
-            $slide.append($items.first().clone());
-            $slide.prepend($items.last().clone());
-
-            $slide.width($imgWidth*($imgCount+2));  //给slides设置宽
-            $slide.css("left",-$imgWidth);
-
-            function playNext(len) {
-                if(!len){
-                    var len=1;
+            var Slider=(function () {
+                function Slide($ct) {
+                    this.$ct=$ct;
+                    this.init();
+                    this.bind();
+                    this.autoPlay();
                 }
-                if(isAnimate)
-                    return;
-                isAnimate=true;
-                $slide.animate({
-                    left: '-='+$imgWidth*len
-                },function () {
-                    pageIndex+=len;
-                    if(pageIndex===$imgCount){
-                        $slide.css("left",-$imgWidth);
-                        pageIndex=0;
+                Slide.prototype ={
+                    init:function () {
+                        var $slide=this.$slide=this.$ct.find(".slides");
+                        var $items=this.$items=$slide.children();
+                        this.$next=this.$ct.find(".next");
+                        this.$prev=this.$ct.find(".prev");
+                        this.$bullets=this.$ct.find(".bullet li");
+
+                        this.$imgWidth=$items.width();
+                        this.$imgCount=$items.length;
+
+                        this.pageIndex=0;
+                        this.isAnimate=false;
+                        this.clock;
+                        //复制前后
+                        $slide.append($items.first().clone());
+                        $slide.prepend($items.last().clone());
+
+                        $slide.width(this.$imgWidth*(this.$imgCount+2));  //给slides设置宽
+                        $slide.css("left",-this.$imgWidth);
+                    },
+                    playNext:function (len) {
+                        if(!len){
+                            var len=1;
+                        }
+                        if(this.isAnimate)
+                            return;
+                        this.isAnimate=true;
+                        var self=this;
+                        this.$slide.animate({
+                            left: '-='+this.$imgWidth*len
+                        },function () {
+                            self.pageIndex+=len;
+                            if(self.pageIndex===self.$imgCount){
+                                self.$slide.css("left",-self.$imgWidth);
+                                self.pageIndex=0;
+                            }
+                            self.setBullet();
+                            self.isAnimate=false;
+                        });
+                    },
+                    playPrev:function (len) {
+                        if(!len){
+                            var len=1;
+                        }
+                        if(this.isAnimate)
+                            return;
+                        var self=this;
+                        self.$slide.animate({
+                            left: '+='+self.$imgWidth*len
+                        },function () {
+                            self.pageIndex-=len;
+                            if(self.pageIndex<0){
+                                self.pageIndex=self.$imgCount-1;
+                                self.$slide.css("left",-self.$imgWidth*self.$imgCount);
+                            }
+                            self.setBullet();
+                            self.isAnimate=false;
+                        });
+                    },
+                    bind:function () {
+                        var self=this;
+                        self.$next.click(function (e) {
+                            e.preventDefault();
+                            self.stopAutoPlay();
+                            self.playNext();
+                        });
+                        self.$prev.click(function (e) {
+                            e.preventDefault();
+                            self.stopAutoPlay();
+                            self.playPrev();
+                        });
+                        self.$bullets.click(function () {
+                            var index=$(this).index();
+                            if(index>self.pageIndex){
+                                self.playNext(index-self.pageIndex);
+                            }else if(index<self.pageIndex){
+                                self.playPrev(self.pageIndex-index);
+                            }
+                        });
+                        self.$items.mouseenter(function () {
+                            self.stopAutoPlay();
+                        }).mouseleave(function () {
+                            self.autoPlay()
+                        });
+                    },
+                    setBullet:function () {
+                        this.$bullets.removeClass("active").eq(this.pageIndex).addClass("active");
+                    },
+                    autoPlay:function () {
+                        var self=this;
+                        this.clock=setInterval(function () {
+                            self.playNext();
+                        },3000);
+                    },
+                    stopAutoPlay:function () {
+                        clearInterval(this.clock);
                     }
-                    setBullet();
-                    isAnimate=false;
-                });
 
-            }
-            function playPrev(len) {
-                if(!len){
-                    var len=1;
-                }
-                if(isAnimate)
-                    return;
-                $slide.animate({
-                    left: '+='+$imgWidth*len
-                },function () {
-                    pageIndex-=len;
-                    if(pageIndex<0){
-                        pageIndex=$imgCount-1;
-                        $slide.css("left",-$imgWidth*$imgCount);
+                };
+                return {
+                    init: function ($ct) {
+                        new Slide($ct);
                     }
-                    setBullet();
-                    isAnimate=false;
-                });
-            }
-
-            $next.click(function (e) {
-                e.preventDefault();
-                stopAutoPlay();
-                playNext();
-            });
-            $prev.click(function (e) {
-                e.preventDefault();
-                stopAutoPlay();
-                playPrev();
-            });
-            autoPlay();
-            $items.mouseenter(function () {
-                stopAutoPlay();
-            }).mouseleave(function () {
-                autoPlay()
-            });
-            function setBullet() {
-                $bullets.removeClass("active").eq(pageIndex).addClass("active");
-            }
-
-            $bullets.click(function () {
-                var index=$(this).index();
-                if(index>pageIndex){
-                    playNext(index-pageIndex);
-                }else if(index<pageIndex){
-                    playPrev(pageIndex-index);
                 }
-
-            });
-            function autoPlay() {
-                 clock=setInterval(function () {
-                    playNext();
-                },3000);
-            }
-
-            function stopAutoPlay() {
-                clearInterval(clock)
-            }
+            })();
+            Slider.init($("#slide"));
         })
     </script>
 </body>
