@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tabs</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        ul,li{
+            list-style: none;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+        }
+        .layout{
+            position: relative;
+            padding: 8px;
+            width: 460px;
+            background: repeating-linear-gradient(-45deg, #cfb9b8, #cfb9b8 2px , #cfb9b8 2px, #c4a7ab 4px);
+            margin-top: 3em;
+        }
+        .tabs{
+            background-color: #f2f1ec;
+        }
+        .clearfix:after{
+            display: block;
+            clear: both;
+            content: "";
+        }
+        .tab-nav{
+            border: 1px solid #b8b3ae;
+            border-bottom: none;
+         }
+        .tab-nav> li{
+            float: left;
+            width: 50%;
+            background: linear-gradient(#e5dfd3, #d0c9b8);
+            height: 48px;
+            line-height: 48px;
+            color: #847E6F;
+            text-shadow: 1px 1px 1px #fff;
+            box-shadow: inset 0 0 2px rgba(0,0,0,.2);
+            text-align: center;
+            cursor: pointer;
+        }
+        .tab1{
+            margin-top: 20px;
+        }
+        .tab1 .tab-nav >li{
+            width: 33.33% ;
+        }
+        .tab-nav> li.active{
+            background: linear-gradient(#fff,#f0ede6);
+            color: #222;
+            box-shadow: none;
+        }
+        .tab-content{
+            background-color: #f0ede6;
+            border: 1px solid #b8b3ae;
+            border-top: none;
+        }
+        .tab-content >li{
+             display: none;
+            min-height: 5em;
+        }
+        .tab-content >li.active{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .circle{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #dfdcd3;
+            margin: 3em 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="tabs">
+            <ul class="tab-nav clearfix">
+                <li class="active">learn</li>
+                <li>practice</li>
+            </ul>
+            <ul class="tab-content">
+                <li class="active">
+                    <div class="circle">
+                        1
+                    </div>
+                </li>
+                <li >
+                    <div class="circle">
+                        2
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="tabs tab1">
+            <ul class="tab-nav clearfix">
+                <li class="active">learn</li>
+                <li>practice</li>
+                <li>promote</li>
+            </ul>
+            <ul class="tab-content">
+                <li class="active">
+                    <div class="circle">
+                        1
+                    </div>
+                </li>
+                <li >
+                    <div class="circle">
+                        2
+                    </div>
+                </li>
+                <li >
+                    <div class="circle">
+                        3
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+<script>
+//    function Tab(ct) {
+//       this.ct=ct;
+//       this.init();
+//       this.bind();
+//    }
+//    Tab.prototype={
+//        init: function () {
+//            this.tabLists=this.ct.querySelectorAll(".tab-nav li");
+//            this.tabCons=this.ct.querySelectorAll(".tab-content li");
+//        },
+//        bind: function () {
+//            var self=this;
+//            this.tabLists.forEach(function (tabLi) {
+//                console.log(tabLi);
+//                tabLi.addEventListener("click",function (e) {
+//                    e.preventDefault();
+//                    var target=e.target;
+//                    console.log("target:");
+//                    console.log(target);
+//                    var index=[].indexOf.call(self.tabLists,target);
+//                    self.tabLists.forEach(function (li) {
+//                        li.classList.remove("active");
+//                    });
+//                    target.classList.add("active");
+//                    self.tabCons.forEach(function (pane) {
+//                        pane.classList.remove("active");
+//                    });
+//                    self.tabCons[index].classList.add("active");
+//                });
+//            })
+//        }
+//    };
+    var Tab=(function () {
+        function Tab1(ct) {
+            this.ct=ct;
+            this.init();
+            this.bind();
+        }
+        Tab1.prototype.init=function () {
+            this.tabLists=this.ct.querySelectorAll(".tab-nav li");
+            this.tabCons=this.ct.querySelectorAll(".tab-content li");
+        };
+        Tab1.prototype.bind=function () {
+            var self=this;
+            this.tabLists.forEach(function (tabLi) {
+                tabLi.addEventListener("click",function (e) {
+                    e.preventDefault();
+                    var target=e.target;
+                    var index=[].indexOf.call(self.tabLists,target);
+                    self.tabLists.forEach(function (li) {
+                        li.classList.remove("active");
+                    });
+                    target.classList.add("active");
+                    self.tabCons.forEach(function (pane) {
+                        pane.classList.remove("active");
+                    });
+                    self.tabCons[index].classList.add("active");
+                });
+            })
+        };
+        return {
+            init:function (ct) {
+               new Tab1(ct);
+            }
+        }
+    })();
+    Tab.init(document.querySelectorAll(".tabs")[0]);
+    Tab.init(document.querySelectorAll(".tabs")[1]);
+</script>
+</body>
+</html>
