@@ -85,7 +85,39 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-    <div class="slide-box" id="slide">
+    <div class="slide-box">
+        <ul class="slides">
+            <li>
+                <a href="#">
+                    <img src="imgs/1.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="imgs/2.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="imgs/3.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="imgs/4.jpg" alt="">
+                </a>
+            </li>
+        </ul>
+        <ol class="bullet">
+            <li class="active"><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+        </ol>
+        <a href="javascript:void(0)" class="next"> > </a>
+        <a href="javascript:void(0)" class="prev"> < </a>
+    </div>
+      <div class="slide-box" >
         <ul class="slides">
             <li>
                 <a href="#">
@@ -235,7 +267,7 @@
                     }
                 }
             })();
-            Slider.init($("#slide"));
+            Slider.init($(".slide-box"));
         })
     </script>
 </body>
