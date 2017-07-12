@@ -195,12 +195,13 @@
         };
         return {
             init:function (ct) {
-               new Tab1(ct);
+                ct.forEach(function (node) {
+                   new Tab1(node);
+                });
             }
         }
     })();
-    Tab.init(document.querySelectorAll(".tabs")[0]);
-    Tab.init(document.querySelectorAll(".tabs")[1]);
+    Tab.init(document.querySelectorAll(".tabs"));
 </script>
 </body>
 </html>
