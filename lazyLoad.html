@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>lazyLoad</title>
+    <style>
+        li{
+            list-style: none;
+        }
+        #img-box{
+            margin: 20px auto;
+            width: 800px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        #img-box li{
+            margin-bottom: 10px;
+        }
+        #img-box li img{
+            width: 310px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <ul id="img-box">
+    <li>
+        <a href="#">
+            <img src="http://www.gznw.gov.cn/ewebeditor/uploadfile/201011/20101118093558219.bmp" alt="" load="loaded">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="http://img1.imgtn.bdimg.com/it/u=3342359560,3086875621&fm=26&gp=0.jpg" alt="" load="loaded">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="http://img1.cache.netease.com/catchpic/E/EB/EBEADB7DEFFDD82FE1BC3FD89132C9AD.jpg" alt="" load="loaded">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="http://img.zcool.cn/community/01ac23555702a20000009c508d4f33.jpg" alt="" load="loaded">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="http://www.goexpo.com.hk/wp-content/uploads/2014/07/2010110309042173-440x290.jpg" alt="" load="loaded">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="http://images.ccoo.cn/news/20111014/2011101420054184.jpg" alt="" load="loaded">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://easyread.ph.126.net/ZHCgtpXeSBNZFFfptK7juA==/7916698124755554891.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://pic1.zfimg.com/2014-11-16/6cd01f7ca8b6acb3bda33bea0a315d52.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://i1.wp.com/www.america.de/wp-content/uploads/Florianopolis.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://photocdn.sohu.com/20131225/Img392368524.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://www.zsnews.cn/data/photo/News/tn_200552715125584778.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://img2.imgtn.bdimg.com/it/u=1067816948,4249745435&fm=214&gp=0.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://www.chla.com.cn/uploadfile/2011/new2011617/images/2012/09/20120912181346.jpg">
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm6Jf4mD41xqOaZD1n3Ne1g_nbc92PBQBp2Fzh6A0Wwv1fhgJ2" alt="" data-src="http://img1.imgtn.bdimg.com/it/u=2930753820,2723250438&fm=214&gp=0.jpg">
+        </a>
+    </li>
+</ul>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>
+    $(function () {
+
+        var Lazy = (function () {
+            function Exposure($target, callback) {
+                this.$target = $target;
+                this.callback = callback;
+                this.bind();
+                this.check();
+            }
+
+            Exposure.prototype.bind = function () {
+                var self = this;
+                $(window).scroll(function () {
+                    self.check();
+                })
+            };
+            Exposure.prototype.check = function () {
+                if (this.isVisible()) {
+                    console.log(1);
+                    this.callback(this.$target);
+                }
+            };
+            Exposure.prototype.isVisible = function () {
+                var offsetTop = this.$target.offset().top;
+                    scrollTop = $(window).scrollTop();
+                    winHeight = $(window).height();
+                    nodeHeight = this.$target.height();
+                if (offsetTop  < scrollTop + winHeight && offsetTop + nodeHeight > scrollTop) {
+                    return true;
+                }
+                return false;
+            };
+            return {
+                init: function ($target, callback) {
+                    $target.each(function (idx, target) {
+                        new Exposure($(target), callback)
+                    });
+                }
+            }
+        })();
+
+        var $imgs = $("#img-box img");
+
+        function lazyImg($node) {
+            if (!isLoad($node)) {
+                loadImg($node);
+                $node.attr("load", "loaded");
+            }
+        }
+
+        function isLoad($node) {
+            if ($node.attr("load")) {
+                return true;
+            }
+            return false;
+        }
+
+        function loadImg($img) {
+            $img.attr("src", $img.attr("data-src"));
+        }
+
+        Lazy.init($imgs, function ($node) {
+            lazyImg($node);
+        });
+    })
+
+</script>
+</body>
+</html>

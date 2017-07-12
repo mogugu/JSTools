@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        table{
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        .calendar{
+            width: 448px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-shadow: 1px 1px 1px #fff;
+            font-family: "Microsoft YaHei";
+        }
+        .calendar .header{
+            position: relative;
+            height: 60px;
+            border-top-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            background: linear-gradient(#fff,#ebebeb);
+            box-shadow: 0 3px 1px rgba(0,0,0,.3);
+            color: #594B47;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .calendar .caret-right{
+            position: absolute;
+            top: 16px;
+            right: 76px;
+            display: block;
+            border-left: 14px solid #594B47;
+            border-right: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+            border-top: 14px solid transparent ;
+            cursor: pointer;
+        }
+        .calendar .caret-left{
+            position: absolute;
+            top: 16px;
+            left: 76px;
+            display: block;
+            border-left: 14px solid transparent;
+            border-right: 14px solid #594B47;
+            border-bottom: 14px solid transparent;
+            border-top: 14px solid transparent ;
+            cursor: pointer;
+        }
+        .calendar .header-date{
+            display: block;
+            width: 200px;
+            position: absolute;
+            left: 126px;
+            top: 18px;
+            text-align: center;
+        }
+        .panel{
+            width: 100%;
+        }
+        .panel thead{
+            background-color: #E1E0E0;
+        }
+        .panel thead td{
+            padding: 6px 0;
+            text-align: center;
+        }
+        .panel tbody td{
+            background: linear-gradient(#fff,#f3f3f3);
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #e0dada;
+            cursor: pointer;
+        }
+        .panel td.cur-month{
+            color: #594B47;
+        }
+
+        .panel td.pre-month{
+            color: #afa9a7;
+        }
+        .panel td.cur-month:hover,
+        .panel td.cur-date{
+            background: linear-gradient(#f8a100,#de5f00) ;
+            color: #fff;
+        }
+        .layout{
+            margin: 20px auto;
+            width: 600px;
+        }
+        .date-ipt{
+            border: 1px solid #f0f0f0;
+            color: #565656;
+            padding: 8px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <input class="date-ipt" type="text" placeholder="有初始值" date-init="2015-12-1" />
+    <input class="date-ipt" type="text" placeholder="无初始值"  />
+</div>
+    <!--<div class="calendar">-->
+        <!--<div class="header">-->
+            <!--<span class="pre caret-left"></span>-->
+            <!--<span class="cur header-date">February 2012</span>-->
+            <!--<span class="next caret-right"></span>-->
+        <!--</div>-->
+        <!--<table class="panel">-->
+            <!--<thead>-->
+                <!--<tr>-->
+                    <!--<td>Sun</td>-->
+                    <!--<td>Mon</td>-->
+                    <!--<td>Tue</td>-->
+                    <!--<td>Wed</td>-->
+                    <!--<td>Thu</td>-->
+                    <!--<td>Fri</td>-->
+                    <!--<td>Sat</td>-->
+                <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+                 <!--<tr>-->
+                     <!--<td class="pre-month">28</td>-->
+                     <!--<td class="pre-month">29</td>-->
+                     <!--<td class="pre-month">30</td>-->
+                     <!--<td class="pre-month">31</td>-->
+                     <!--<td class="cur-month cur-date">01</td>-->
+                     <!--<td class="cur-month">02</td>-->
+                     <!--<td class="cur-month">03</td>-->
+                 <!--</tr>-->
+                 <!--<tr>-->
+                     <!--<td class="cur-month">04</td>-->
+                     <!--<td class="cur-month">05</td>-->
+                     <!--<td class="cur-month">06</td>-->
+                     <!--<td class="cur-month">07</td>-->
+                     <!--<td class="cur-month">08</td>-->
+                     <!--<td class="cur-month">09</td>-->
+                     <!--<td class="cur-month">10</td>-->
+                 <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>-->
+<script src="Calendar.js"></script>
+   <script>
+       $(function () {
+           Calendar.init($(".date-ipt"));
+       });
+   </script>
+</body>
+</html>
