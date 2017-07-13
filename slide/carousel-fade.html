@@ -111,87 +111,98 @@
     </div>
     <script>
         $(function () {
-            var slide=function () {
-                var $slide = $(".slides");
-                var $items = $slide.children();
-                var $next = $(".next");
-                var $prev = $(".prev");
-                var $bullets = $(".bullet li");
+            var Slide=function () {
+                function Slider($ct) {
+                    this.$ct=$ct;
+                    this.init();
+                    this.bind();
+                    this.autoPlay();
+                }
+                Slider.prototype={
+                    init:function () {
+                        this.$items = this.$ct.find(".slides").children();
+                        this.$next = this.$ct.find(".next");
+                        this.$prev = this.$ct.find(".prev");
+                        this.$bullets = this.$ct.find(".bullet li");
+                        this.$imgCount = this.$items.length;
+                        this.curIndex = 0;
+                        this.isAnimate = false;
+                        this.clock;
+                        this.$items.hide();
+                        this.$items.first().show();
 
-                var $imgCount = $items.length;
-
-                var curIndex = 0;
-                var isAnimate = false;
-                var clock;
-
-                $items.first().show();
-
-                function playNext() {
-                    if (curIndex === $imgCount - 1) {
-                        play(0);
+                    },
+                    playNext:function(){
+                        if (this.curIndex === this.$imgCount - 1) {
+                            this.play(0);
+                        }
+                        this.play(this.curIndex + 1);
+                    },
+                    playPre:function(){
+                        if (this.curIndex === 0) {
+                            this.play(this.$imgCount - 1);
+                        } else {
+                            this.play(this.curIndex - 1);
+                        }
+                    },
+                    bind:function(){
+                        var self=this;
+                        self.$items.mouseenter(function () {
+                            self.stopAutoPlay();
+                        }).mouseleave(function () {
+                            self.autoPlay();
+                        });
+                        self.$bullets.click(function () {
+                            var index = $(this).index();
+                            self.play(index);
+                        });
+                        self.$next.click(function (e) {
+                            e.preventDefault();
+                            self.stopAutoPlay();
+                            self.playNext();
+                        });
+                        self.$prev.click(function (e) {
+                            e.preventDefault();
+                            self.stopAutoPlay();
+                            self.playPrev();
+                        });
+                    },
+                    setBullet: function(){
+                        this.$bullets.removeClass("active").eq(this.curIndex).addClass("active");
+                    },
+                    play:function(idx){
+                        if (this.isAnimate) {
+                            return;
+                        }
+                        this.isAnimate = true;
+                        this.$items.eq(this.curIndex).fadeOut(500);
+                        var self=this;
+                        this.$items.eq(idx).fadeIn(500, function () {
+                            self.isAnimate = false;
+                        });
+                        this.curIndex = idx;
+                        this.setBullet();
+                    },
+                    autoPlay:function(){
+                        var self=this;
+                        self.clock = setInterval(function () {
+                            self.playNext();
+                        }, 3000);
+                    },
+                    stopAutoPlay:function(){
+                        var self=this;
+                        clearInterval(self.clock)
                     }
-                    play(curIndex + 1);
-                }
-                function playPrev() {
-                    if (curIndex === 0) {
-                        play($imgCount - 1);
-                    } else {
-                        play(curIndex - 1);
+                };
+                return{
+                    init:function ($ct) {
+                        $ct.each(function (idx,node) {
+                            new Slider($(node));
+                        })
                     }
-                }
-                function init() {
-                    autoPlay();
-                    $items.mouseenter(function () {
-                        stopAutoPlay();
-                    }).mouseleave(function () {
-                        autoPlay();
-                    });
-                    $bullets.click(function () {
-                        var index = $(this).index();
-                        play(index);
-                    });
-                    $next.click(function (e) {
-                        e.preventDefault();
-                        stopAutoPlay();
-                        playNext();
-                    });
-                    $prev.click(function (e) {
-                        e.preventDefault();
-                        stopAutoPlay();
-                        playPrev();
-                    });
-                }
-
-                function setBullet() {
-                    $bullets.removeClass("active").eq(curIndex).addClass("active");
-                }
-
-                function play(idx) {
-                    if (isAnimate) {
-                        return;
-                    }
-                    isAnimate = true;
-                    $items.eq(curIndex).fadeOut(500);
-                    $items.eq(idx).fadeIn(500, function () {
-                        isAnimate = false;
-                    });
-                    curIndex = idx;
-                    setBullet();
-                }
-                function autoPlay() {
-                    clock = setInterval(function () {
-                        playNext();
-                    }, 3000);
-                }
-
-                function stopAutoPlay() {
-                    clearInterval(clock)
-                }
-                return {
-                    init: init
                 };
             }();
-            slide.init();
+            Slide.init($(".slide-box"));
         })
     </script>
 </body>
