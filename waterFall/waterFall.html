@@ -18,6 +18,7 @@
             margin-left: 10px;
             margin-bottom: 10px;
             transition: all 1s;
+            background-color: rgba(0,0,0,.3);
         }
         .h1{
             height: 300px;
@@ -78,38 +79,37 @@
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
     $(function () {
-        var waterFall=function () {
-            function init() {
-                waterFall();
-                $(window).resize(function () {
-                    waterFall()
-                });
+        var waterFall=(function () {
+            function WaterFall($items) {
+                this.$items=$items;
+                this.init();
             }
-            function waterFall() {
-                var $items=$(".item");
-                var itemArr=[];
-                var $itemWidth=$items.outerWidth(true);
-                var column=parseInt($(window).width()/$itemWidth);
-                for(var i=0;i<column;i++){
-                    itemArr[i]=0;
+            WaterFall.prototype.init=function () {
+                var _this=this;
+                _this.itemArr=[];
+                _this.$itemWidth=_this.$items.outerWidth(true);
+                _this.colume=parseInt($(window).width()/_this.$itemWidth);
+                for(var i=0;i<_this.colume;i++){
+                    _this.itemArr[i]=0;
                 }
+                _this.$items.each(function () {
 
-                $items.each(function () {
-                    var minValue=Math.min.apply(null,itemArr);  //得到最小高度的列
-                    var minIndex=itemArr.indexOf(minValue);  //得到最小高度的列所在的位置
-
+                    var minValue=Math.min.apply(null,_this.itemArr); //得到最小高度的列
+                    var minIndex=[].indexOf.call(_this.itemArr,minValue); //最小高度列所在位置
                     $(this).css({
-                        top: itemArr[minIndex],
-                        left: $itemWidth * minIndex
+                        top: _this.itemArr[minIndex],
+                        left: _this.$itemWidth* minIndex
                     });
-                    itemArr[minIndex] += $(this).outerHeight(true);
-                });
-            }
+                    _this.itemArr[minIndex] += $(this).outerHeight(true);
+                })
+            };
             return {
-                init: init
+                init: function ($items) {
+                    new WaterFall($items);
+                }
             }
-        }();
-        waterFall.init();
+        })();
+       waterFall.init($(".item"));
     })
 </script>
 </body>

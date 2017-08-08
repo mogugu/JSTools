@@ -23,15 +23,11 @@
             overflow: hidden;
         }
         .slides{
-            position: absolute;
-        }
-        .slides:after{
-            clear: both;
-            display: block;
-            content: ""
+            position: relative;
+            width: 100%;
+            height: 100%;
         }
         .slides li{
-            float: left;
             width: 1000px;
             height: 500px;
         }
@@ -82,193 +78,95 @@
             left: 10px;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-    <div class="slide-box">
-        <ul class="slides">
-            <li>
-                <a href="#">
-                    <img src="imgs/1.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="imgs/2.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="imgs/3.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="imgs/4.jpg" alt="">
-                </a>
-            </li>
-        </ul>
-        <ol class="bullet">
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-        </ol>
-        <a href="javascript:void(0)" class="next"> > </a>
-        <a href="javascript:void(0)" class="prev"> < </a>
-    </div>
-      <div class="slide-box" >
-        <ul class="slides">
-            <li>
-                <a href="#">
-                    <img src="imgs/1.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="imgs/2.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="imgs/3.jpg" alt="">
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="imgs/4.jpg" alt="">
-                </a>
-            </li>
-        </ul>
-        <ol class="bullet">
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-        </ol>
-        <a href="javascript:void(0)" class="next"> > </a>
-        <a href="javascript:void(0)" class="prev"> < </a>
-    </div>
-    <script>
-        $(function () {
-
-            var Slider=(function () {
-                function Slide($ct) {
-                    this.$ct=$ct;
-                    this.init();
-                    this.bind();
-                    this.autoPlay();
-                }
-                Slide.prototype ={
-                    init:function () {
-                        var $slide=this.$slide=this.$ct.find(".slides");
-                        var $items=this.$items=$slide.children();
-                        this.$next=this.$ct.find(".next");
-                        this.$prev=this.$ct.find(".prev");
-                        this.$bullets=this.$ct.find(".bullet li");
-
-                        this.$imgWidth=$items.width();
-                        this.$imgCount=$items.length;
-
-                        this.pageIndex=0;
-                        this.isAnimate=false;
-                        this.clock;
-                        //复制前后
-                        $slide.append($items.first().clone());
-                        $slide.prepend($items.last().clone());
-
-                        $slide.width(this.$imgWidth*(this.$imgCount+2));  //给slides设置宽
-                        $slide.css("left",-this.$imgWidth);
-                    },
-                    playNext:function (len) {
-                        if(!len){
-                            var len=1;
-                        }
-                        if(this.isAnimate)
-                            return;
-                        this.isAnimate=true;
-                        var self=this;
-                        this.$slide.animate({
-                            left: '-='+this.$imgWidth*len
-                        },function () {
-                            self.pageIndex+=len;
-                            if(self.pageIndex===self.$imgCount){
-                                self.$slide.css("left",-self.$imgWidth);
-                                self.pageIndex=0;
-                            }
-                            self.setBullet();
-                            self.isAnimate=false;
-                        });
-                    },
-                    playPrev:function (len) {
-                        if(!len){
-                            var len=1;
-                        }
-                        if(this.isAnimate)
-                            return;
-                        var self=this;
-                        self.$slide.animate({
-                            left: '+='+self.$imgWidth*len
-                        },function () {
-                            self.pageIndex-=len;
-                            if(self.pageIndex<0){
-                                self.pageIndex=self.$imgCount-1;
-                                self.$slide.css("left",-self.$imgWidth*self.$imgCount);
-                            }
-                            self.setBullet();
-                            self.isAnimate=false;
-                        });
-                    },
-                    bind:function () {
-                        var self=this;
-                        self.$next.click(function (e) {
-                            e.preventDefault();
-                            self.stopAutoPlay();
-                            self.playNext();
-                        });
-                        self.$prev.click(function (e) {
-                            e.preventDefault();
-                            self.stopAutoPlay();
-                            self.playPrev();
-                        });
-                        self.$bullets.click(function () {
-                            var index=$(this).index();
-                            if(index>self.pageIndex){
-                                self.playNext(index-self.pageIndex);
-                            }else if(index<self.pageIndex){
-                                self.playPrev(self.pageIndex-index);
-                            }
-                        });
-                        self.$items.mouseenter(function () {
-                            self.stopAutoPlay();
-                        }).mouseleave(function () {
-                            self.autoPlay()
-                        });
-                    },
-                    setBullet:function () {
-                        this.$bullets.removeClass("active").eq(this.pageIndex).addClass("active");
-                    },
-                    autoPlay:function () {
-                        var self=this;
-                        this.clock=setInterval(function () {
-                            self.playNext();
-                        },3000);
-                    },
-                    stopAutoPlay:function () {
-                        clearInterval(this.clock);
-                    }
-
-                };
-                return {
-                    init: function ($ct) {
-                        $ct.each(function (idx,node) {
-                            new Slide($(node));
-                        });
-                    }
-                }
-            })();
-            Slider.init($(".slide-box"));
-        })
-    </script>
+<div class="slide-box" id="slide">
+    <ul class="slides">
+        <li>
+            <a href="#">
+                <img src="imgs/1.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img src="imgs/2.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img src="imgs/3.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img src="imgs/4.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+    <ol class="bullet">
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+    </ol>
+    <a href="javascript:void(0)" class="next"> > </a>
+    <a href="javascript:void(0)" class="prev"> < </a>
+</div>
+<div class="slide-box" id="slide1">
+    <ul class="slides">
+        <li>
+            <a href="#">
+                <img src="imgs/1.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img src="imgs/2.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img src="imgs/3.jpg" alt="">
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img src="imgs/4.jpg" alt="">
+            </a>
+        </li>
+    </ul>
+    <ol class="bullet">
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+    </ol>
+    <a href="javascript:void(0)" class="next"> > </a>
+    <a href="javascript:void(0)" class="prev"> < </a>
+</div>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="slide.js"></script>
+<script>
+    $(function () {
+        $("#slide").Slider({
+            autoPlay: true,
+            playMode: "fade",
+            controller: $(this).find(".bullet"),
+            cls: "active",
+            nextBtn: ".next",
+            preBtn: ".prev",
+            time: 4000
+        });
+        $("#slide1").Slider({
+            autoPlay: true,
+            playMode: "slide",
+            controller: $(this).find(".bullet"),
+            cls: "active",
+            nextBtn: ".next",
+            preBtn: ".prev",
+            time: 4000
+        });
+    });
+</script>
 </body>
 </html>

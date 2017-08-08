@@ -77,7 +77,7 @@
     $(function () {
         var $itemWidth=$(".item").outerWidth(true);
         var column=parseInt($(".container").width()/$itemWidth); //得到列数
-        var newsNum=8;
+        var newsNum=10;
         var page=1;
         var colHeight=[];
         //存放瀑布流元素高度的数组初始化
@@ -139,7 +139,7 @@
             var htmls="<li class='item'><a href='"+data.url+"'>";
             htmls += "<img src='"+data.img_url+"'></a>";
             htmls += "<h3>"+data.short_name +"</h3>";
-            htmls += "<p class='des'>"+ data.short_intro +"</p></li>"
+            htmls += "<p class='des'>"+ data.short_intro +"</p></li>";
 
             return $(htmls);
         }
