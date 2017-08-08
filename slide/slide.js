@@ -49,7 +49,7 @@
                this.$bullets.click(function (e) {
                    e.preventDefault();
                    var index=$(this).index();
-                   self.play(index,self.options.mode);
+                   self.play(index,self.options.playMode);
                });
                this.$items.mouseenter(function () {
                    self.stopAutoPlay();
