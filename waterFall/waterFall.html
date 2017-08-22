@@ -77,39 +77,10 @@
     </div>
 </div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="waterFall.js"></script>
 <script>
     $(function () {
-        var waterFall=(function () {
-            function WaterFall($items) {
-                this.$items=$items;
-                this.init();
-            }
-            WaterFall.prototype.init=function () {
-                var _this=this;
-                _this.itemArr=[];
-                _this.$itemWidth=_this.$items.outerWidth(true);
-                _this.colume=parseInt($(window).width()/_this.$itemWidth);
-                for(var i=0;i<_this.colume;i++){
-                    _this.itemArr[i]=0;
-                }
-                _this.$items.each(function () {
-
-                    var minValue=Math.min.apply(null,_this.itemArr); //得到最小高度的列
-                    var minIndex=[].indexOf.call(_this.itemArr,minValue); //最小高度列所在位置
-                    $(this).css({
-                        top: _this.itemArr[minIndex],
-                        left: _this.$itemWidth* minIndex
-                    });
-                    _this.itemArr[minIndex] += $(this).outerHeight(true);
-                })
-            };
-            return {
-                init: function ($items) {
-                    new WaterFall($items);
-                }
-            }
-        })();
-       waterFall.init($(".item"));
+       waterFall.init($(".content"));
     })
 </script>
 </body>
